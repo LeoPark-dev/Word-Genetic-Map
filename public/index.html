@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Genetic Map</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="pixel-blast-layer" aria-hidden="true"></div>
+    <!-- 초기 검색 화면 -->
+    <div class="container" id="search-screen">
+        <div class="main-content">
+            <h1 class="title">Word Genetic Map</h1>
+            <div class="logo">
+                <img src="Earth_DNA_1.png" alt="Word Genetic Map Logo">
+            </div>
+            <div class="search-container">
+                <div class="search-box glass-panel">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search-input" placeholder="단어를 입력하세요...">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 로딩 화면 -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-content">
+            <div class="logo-container">
+                <img src="Earth_DNA_1.png" alt="Loading Logo" class="loading-logo">
+            </div>
+            <div class="loading-text">유전자 분석 중</div>
+        </div>
+    </div>
+
+    <!-- 결과 화면 -->
+    <div class="results-container" id="results-screen">
+        <button type="button" id="back-button" class="back-button">
+            <span class="back-icon">←</span>
+        </button>
+        <!-- 왼쪽 컬럼 -->
+        <div class="left-column">
+            <!-- DNA 시각화 섹션 -->
+            <div class="dna-visualization">
+                <div class="word-structure-labels">
+                    <div class="structure-label prefix-label">Prefix</div>
+                    <div class="structure-divider">|</div>
+                    <div class="structure-label root-label">Root</div>
+                    <div class="structure-divider">|</div>
+                    <div class="structure-label suffix-label">Suffix</div>
+                </div>
+
+                <div class="dna-container">
+                    <div class="dna-overlay">
+                        <div class="dna-section prefix-section"></div>
+                        <div class="dna-section root-section"></div>
+                        <div class="dna-section suffix-section"></div>
+                    </div>
+                    <img src="DNA.png" alt="DNA Structure" class="dna-image">
+                </div>
+
+                <div class="word-structure-cards">
+                    <div class="word-part prefix-part" data-tooltip="접두사는 단어의 앞에 붙어 의미를 변형하는 역할을 합니다">
+                        <span class="part-label">접두사</span>
+                        <span class="part-content"></span>
+                    </div>
+                    <div class="word-part root-part" data-tooltip="어근은 단어의 핵심 의미를 담고 있는 기본 요소입니다">
+                        <span class="part-label">어근</span>
+                        <span class="part-content"></span>
+                    </div>
+                    <div class="word-part suffix-part" data-tooltip="접미사는 단어의 뒤에 붙어 품사나 의미를 확장하는 역할을 합니다">
+                        <span class="part-label">접미사</span>
+                        <span class="part-content"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 분석 결과 섹션 -->
+            <div class="analysis-results">
+                <h2 class="analysis-title">단어 분석 결과</h2>
+                <div class="word-parts-container">
+                    <div class="word-part-card prefix-card glass-panel">
+                        <div class="card-header">
+                            <h3>접두사 (Prefix)</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="word-content"></div>
+                            <div class="word-meaning">
+                                <h4>의미</h4>
+                                <p class="meaning"></p>
+                            </div>
+                            <div class="word-background">
+                                <h4>어원 배경</h4>
+                                <p class="background"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-part-card root-card glass-panel">
+                        <div class="card-header">
+                            <h3>어근 (Root)</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="word-content"></div>
+                            <div class="word-meaning">
+                                <h4>의미</h4>
+                                <p class="meaning"></p>
+                            </div>
+                            <div class="word-background">
+                                <h4>어원 배경</h4>
+                                <p class="background"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-part-card suffix-card glass-panel">
+                        <div class="card-header">
+                            <h3>접미사 (Suffix)</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="word-content"></div>
+                            <div class="word-meaning">
+                                <h4>의미</h4>
+                                <p class="meaning"></p>
+                            </div>
+                            <div class="word-background">
+                                <h4>어원 배경</h4>
+                                <p class="background"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 오른쪽 컬럼 -->
+        <div class="right-column">
+            <!-- Mutant Gene 섹션 -->
+            <div class="mutant-gene glass-panel">
+                <h2 class="section-title">Mutant Gene</h2>
+                <div class="word-buttons">
+                    <div class="word-button group">
+                        <span class="tooltip">안을 들여다보다 → 조사하다</span>
+                        inspect
+                    </div>
+                    <div class="word-button group">
+                        <span class="tooltip">다시 보다 → 존중하다</span>
+                        respect
+                    </div>
+                    <div class="word-button group">
+                        <span class="tooltip">아래로 보다 → 의심하다</span>
+                        suspect
+                    </div>
+                    <div class="word-button group">
+                        <span class="tooltip">밖을 보다 → 기대하다</span>
+                        expect
+                    </div>
+                    <div class="word-button group">
+                        <span class="tooltip">앞으로 보다 → 전망, 가능성</span>
+                        prospect
+                    </div>
+                    <div class="word-button group">
+                        <span class="tooltip">뒤를 보다 → 회상</span>
+                        retrospect
+                    </div>
+                    <div class="word-button group">
+                        <span class="tooltip">주위를 보다 → 신중한</span>
+                        circumspect
+                    </div>
+                    <div class="word-button group">
+                        <span class="tooltip">~쪽을 보다 → 양상, 모습</span>
+                        aspect
+                    </div>
+                    <div class="word-button group">
+                        <span class="tooltip">보는 사람 → 관객</span>
+                        spectator
+                    </div>
+                    <div class="word-button group">
+                        <span class="tooltip">보이는 유형 → 유령, 환영</span>
+                        specter
+                    </div>
+                    <div class="word-button group">
+                        <span class="tooltip">보는 도구 → 안경</span>
+                        spectacles
+                    </div>
+                    <div class="word-button group">
+                        <span class="tooltip">관점을 갖고 보다 → 관점, 시각</span>
+                        perspective
+                    </div>
+                    <div class="word-button group">
+                        <span class="tooltip">보다에서 시작 → 사색하다, 추측하다</span>
+                        speculate
+                    </div>
+                    <div class="word-button group">
+                        <span class="tooltip">함께 + 보다 → 눈에 띄는</span>
+                        conspicuous
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 이야기 생성기 섹션 -->
+            <div class="story-generator glass-panel">
+                <h2>Story Generator</h2>
+                <div class="generator-controls">
+                <select id="gpt-character">
+                    <option value="poet">🧙 시인</option>
+                    <option value="robot">🤖 AI 로봇</option>
+                    <option value="linguist">📚 언어학자</option>
+                    <option value="fantasy">🧝 판타지 소설가</option>
+                    <option value="children">👶 동화작가</option>
+                </select>
+                    <div class="language-selector">
+                        <button id="lang-ko" class="lang-btn active">한국어</button>
+                        <button id="lang-en" class="lang-btn">English</button>
+                    </div>
+                </div>
+                <button id="generate-story">이야기 생성하기</button>
+                <div class="story-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <style>
+        .analysis-results {
+            padding: 20px;
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .analysis-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .word-parts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 10px;
+            align-items: stretch;
+            grid-auto-rows: 1fr;
+        }
+
+        .word-part-card {
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .word-part-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .prefix-card .card-header::before {
+            background: linear-gradient(to right, #6fc3df, rgba(111, 195, 223, 0.3));
+        }
+
+        .root-card .card-header::before {
+            background: linear-gradient(to right, #a682ff, rgba(166, 130, 255, 0.3));
+        }
+
+        .suffix-card .card-header::before {
+            background: linear-gradient(to right, #8df5c0, rgba(141, 245, 192, 0.3));
+        }
+
+        .card-header h3 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .card-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .word-content {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e6f0ff;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .word-meaning, .word-background {
+            margin-bottom: 15px;
+        }
+
+        .word-meaning h4, .word-background h4 {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .word-meaning p, .word-background p {
+            color: #e6f0ff;
+            line-height: 1.6;
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .prefix-card .word-content {
+            color: rgba(111, 195, 223, 0.9);
+        }
+
+        .root-card .word-content {
+            color: rgba(166, 130, 255, 0.9);
+        }
+
+        .suffix-card .word-content {
+            color: rgba(141, 245, 192, 0.9);
+        }
+
+        @media (max-width: 768px) {
+            .word-parts-container {
+                grid-template-columns: 1fr;
+            }
+
+            .analysis-results {
+                padding: 10px;
+            }
+
+            .word-part-card {
+                margin-bottom: 15px;
+            }
+        }
+
+        .dna-visualization {
+            position: relative;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .word-structure-labels {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            font-family: 'Noto Sans KR', sans-serif;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .structure-label {
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.8;
+            position: relative;
+        }
+
+        .structure-label::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .prefix-label::after {
+            background: #6fc3df;
+        }
+
+        .root-label::after {
+            background: #a682ff;
+        }
+
+        .suffix-label::after {
+            background: #8df5c0;
+        }
+
+        .structure-label:hover::after {
+            width: 70%;
+        }
+
+        .structure-divider {
+            color: rgba(255, 255, 255, 0.2);
+            margin: 0 10px;
+        }
+
+        .prefix-label {
+            color: #6fc3df;
+        }
+
+        .root-label {
+            color: #a682ff;
+        }
+
+        .suffix-label {
+            color: #8df5c0;
+        }
+
+        .dna-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 20px auto;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .dna-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            opacity: 0.9;
+        }
+
+        .dna-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            pointer-events: none;
+        }
+
+        .dna-section {
+            flex: 1;
+            opacity: 0.15;
+            position: relative;
+        }
+
+        .dna-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 16px;
+        }
+
+        .prefix-section::before {
+            background: #6fc3df;
+        }
+
+        .root-section::before {
+            background: #a682ff;
+        }
+
+        .suffix-section::before {
+            background: #8df5c0;
+        }
+
+        .word-structure-cards {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 0 10px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .word-part {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            position: relative;
+            cursor: help;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .word-part:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .prefix-part {
+            border: 1px solid rgba(111, 195, 223, 0.3);
+            color: #6fc3df;
+        }
+
+        .root-part {
+            border: 1px solid rgba(166, 130, 255, 0.3);
+            color: #a682ff;
+            margin: 0 15px;
+        }
+
+        .suffix-part {
+            border: 1px solid rgba(141, 245, 192, 0.3);
+            color: #8df5c0;
+        }
+
+        .part-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            opacity: 0.8;
+        }
+
+        .part-content {
+            display: block;
+            font-size: 24px;
+            font-weight: bold;
+            min-height: 36px;
+        }
+
+        /* 툴팁 스타일 */
+        .word-part[data-tooltip]:before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 12px;
+            background: rgba(15, 23, 42, 0.95);
+            color: white;
+            font-size: 12px;
+            border-radius: 4px;
+            white-space: nowrap;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .word-part[data-tooltip]:hover:before {
+            visibility: visible;
+            opacity: 1;
+            bottom: calc(100% + 10px);
+        }
+
+        /* 반응형 스타일 */
+        @media (max-width: 768px) {
+            .word-structure-labels {
+                flex-direction: column;
+                width: 90%;
+            }
+
+            .structure-divider {
+                display: none;
+            }
+
+            .structure-label {
+                margin: 5px 0;
+            }
+
+            .dna-container {
+                width: 90%;
+            }
+
+            .dna-overlay {
+                flex-direction: column;
+            }
+
+            .word-structure-cards {
+                flex-direction: column;
+                width: 90%;
+            }
+
+            .word-part {
+                margin: 5px 0;
+            }
+
+            .root-part {
+                margin: 10px 0;
+            }
+        }
+
+        .mutant-gene {
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .section-title {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .word-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .word-button {
+            background-color: #2d3748;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .word-button:hover {
+            background-color: #4a5568;
+            transform: translateY(-2px);
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ffffff;
+            color: #1a202c;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            pointer-events: none;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px;
+            border-style: solid;
+            border-color: #ffffff transparent transparent transparent;
+        }
+
+        .word-button:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+            bottom: calc(100% + 5px);
+        }
+
+        @media (max-width: 768px) {
+            .mutant-gene {
+                padding: 10px;
+            }
+
+            .word-buttons {
+                gap: 8px;
+            }
+
+            .word-button {
+                font-size: 13px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</body>
+</html> 
